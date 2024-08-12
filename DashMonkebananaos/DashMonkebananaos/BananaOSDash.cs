@@ -77,7 +77,7 @@ namespace DashMonkebananaos
                 case WatchButtonType.Left:
                     if(selectionHandler.currentIndex == 1)
                     {
-                        if(power > 0)
+                        if(power > 100)
                         {
                             power -= 5f;
                         }
@@ -167,5 +167,9 @@ public bool IsModded()
     return gameMode.ToString().Contains("MODDED");
 }
 
-public override void OnJoinedRoom() => PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out gameMode);
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out gameMode);
+        BananaOS.MonkeWatch.Instance.UpdateScreen();
+    }
 }
