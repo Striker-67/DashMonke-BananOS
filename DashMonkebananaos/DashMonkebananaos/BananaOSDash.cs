@@ -36,7 +36,7 @@ namespace DashMonkebananaos
         public override string OnGetScreenContent()
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("<color=red>==</color> DashMonke <color=red>==</color>");
+            stringBuilder.AppendLine("DashMonke");
             if (PhotonNetwork.InRoom && moddedcheck.IsModded())
             {
                 if (CanDash)
@@ -170,6 +170,10 @@ public bool IsModded()
     public override void OnJoinedRoom()
     {
         PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out gameMode);
+        BananaOS.MonkeWatch.Instance.UpdateScreen();
+    }
+    public override void OnLeftRoom()
+    {
         BananaOS.MonkeWatch.Instance.UpdateScreen();
     }
 }
