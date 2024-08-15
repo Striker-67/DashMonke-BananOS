@@ -52,11 +52,12 @@ namespace DashMonkebananaos
                 stringBuilder.AppendLine(selectionHandler.GetOriginalBananaOSSelectionText(1, "Power: " + power));
                 stringBuilder.AppendLine("<color=red>setting to low may cause you not to move</color>");
                 stringBuilder.AppendLine(selectionHandler.GetOriginalBananaOSSelectionText(2, "CoolDown: " + cooldown));
-               
-               
+                BananaNotifications.DisplayNotification("Your in a modded", Color.yellow, Color.white, 1);
+
             }
             else
             {
+                BananaNotifications.DisplayNotification("Your NOT in a modded", Color.red, Color.white, 1);
                 stringBuilder.AppendLine("you're either not in a room\n\nor you are not in a modded");
             }
              return stringBuilder.ToString();
