@@ -19,6 +19,14 @@ namespace DashMonkebananaos
 
             HarmonyPatches.RemoveHarmonyPatches();
         }
+        public void Start()
+        {
+            GorillaTagger.OnPlayerSpawned(OnSpawned);
+        }
+        public void OnSpawned()
+        {
+           gameObject.AddComponent<Moddedcheck>();
+        }
 
 
     }

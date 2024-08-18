@@ -18,15 +18,30 @@ namespace DashMonkebananaos
         public Vector3 Direction { get; private set; }
         float power = 300f;
         float cooldown = 1f;
-        Moddedcheck moddedcheck;
         public override string Title => "DashMonke";
 
         public override bool DisplayOnMainMenu => true;
 
         public void Start()
         {
-            gameObject.AddComponent<Moddedcheck>();
-            moddedcheck = FindAnyObjectByType<Moddedcheck>();
+            if (!PlayerPrefs.HasKey("Power"))
+            {
+                power = 300f;
+            }
+            else
+            {
+                power = PlayerPrefs.GetFloat("Power");
+            }
+            if (!PlayerPrefs.HasKey("Cooldown"))
+            {
+                cooldown = 1f;
+            }
+            else
+            {
+                cooldown = PlayerPrefs.GetFloat("Cooldown");
+            }
+            
+           
         }
         public override void OnPostModSetup()
         {
@@ -37,7 +52,7 @@ namespace DashMonkebananaos
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("DashMonke");
-            if (PhotonNetwork.InRoom && moddedcheck.IsModded())
+            if (PhotonNetwork.InRoom && Moddedcheck.modcheck.IsModded())
             {
                 if (CanDash)
                 {
@@ -50,14 +65,12 @@ namespace DashMonkebananaos
 
                 stringBuilder.AppendLine("<color=red>==</color> settings <color=red>==</color>");
                 stringBuilder.AppendLine(selectionHandler.GetOriginalBananaOSSelectionText(1, "Power: " + power));
-                stringBuilder.AppendLine("<color=red>setting to low may cause you not to move</color>");
                 stringBuilder.AppendLine(selectionHandler.GetOriginalBananaOSSelectionText(2, "CoolDown: " + cooldown));
-                BananaNotifications.DisplayNotification("Your in a modded", Color.yellow, Color.white, 1);
-
+                stringBuilder.AppendLine(selectionHandler.GetOriginalBananaOSSelectionText(3, "SaveSettings"));
             }
             else
             {
-                BananaNotifications.DisplayNotification("Your NOT in a modded", Color.red, Color.white, 1);
+               
                 stringBuilder.AppendLine("you're either not in a room\n\nor you are not in a modded");
             }
              return stringBuilder.ToString();
@@ -116,6 +129,13 @@ namespace DashMonkebananaos
 
                         return;
                     }
+                    if (selectionHandler.currentIndex == 3)
+                    {
+                        PlayerPrefs.SetFloat("Power", power);
+                        PlayerPrefs.SetFloat("Cooldown", cooldown);
+
+                        return;
+                    }
                     break;
 
                 //It is recommended that you keep this unless you're nesting pages if so you should use the SwitchToPage method
@@ -134,7 +154,7 @@ namespace DashMonkebananaos
 
 
             }
-            if (PhotonNetwork.InRoom && !moddedcheck.IsModded())
+            if (PhotonNetwork.InRoom && !Moddedcheck.modcheck.IsModded())
             {
                 CanDash = false;
             }
@@ -161,20 +181,32 @@ public class Moddedcheck : MonoBehaviourPunCallbacks
     public static Moddedcheck modcheck;
     public object gameMode;
 
+    public void Start()
+    {
+        modcheck = this;
+    }
 public bool IsModded()
 {
-    if (!PhotonNetwork.InRoom)
-        return false;
-    return gameMode.ToString().Contains("MODDED");
+    return PhotonNetwork.InRoom && gameMode.ToString().Contains("MODDED");
 }
 
     public override void OnJoinedRoom()
     {
         PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out gameMode);
         BananaOS.MonkeWatch.Instance.UpdateScreen();
+        if (IsModded())
+        {
+            BananaNotifications.DisplayNotification("Your in a modded", Color.yellow, Color.white, 1);
+        }
+        else
+        {
+            BananaNotifications.DisplayNotification("Your NOT in a modded", Color.red, Color.white, 1);
+        }
+      
     }
     public override void OnLeftRoom()
     {
         BananaOS.MonkeWatch.Instance.UpdateScreen();
+       
     }
 }
