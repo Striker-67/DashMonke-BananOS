@@ -52,7 +52,7 @@ namespace DashMonkebananaos
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("DashMonke");
-            if (PhotonNetwork.InRoom && Moddedcheck.modcheck.IsModded())
+            if (PhotonNetwork.InRoom && NetworkSystem.Instance.GameModeString.Contains("MODDED"))
             {
                 if (CanDash)
                 {
@@ -148,7 +148,7 @@ namespace DashMonkebananaos
         {
             if (CanDash && ControllerInputPoller.instance.leftControllerPrimaryButton)
             {
-
+                GorillaTagger.Instance.bodyCollider.attachedArticulationBody.velocity = Vector3.zero;
                     GorillaTagger.Instance.rigidbody.AddForce(GorillaTagger.Instance.headCollider.transform.forward * power, ForceMode.Impulse);
                 StartCoroutine("Cooldown");
 
@@ -187,12 +187,11 @@ public class Moddedcheck : MonoBehaviourPunCallbacks
     }
 public bool IsModded()
 {
-    return PhotonNetwork.InRoom && gameMode.ToString().Contains("MODDED");
+        return NetworkSystem.Instance.GameModeString.Contains("MODDED");
 }
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out gameMode);
         BananaOS.MonkeWatch.Instance.UpdateScreen();
         if (IsModded())
         {

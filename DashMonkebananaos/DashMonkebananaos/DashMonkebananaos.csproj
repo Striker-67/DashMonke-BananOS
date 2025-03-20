@@ -18,7 +18,7 @@
       <HintPath>$(GameAssemblyPath)\BakeryRuntimeAssembly.dll</HintPath>
     </Reference>
     <Reference Include="BananaOS">
-      <HintPath>E:\steam\steamapps\common\Gorilla Tag\BepInEx\plugins\BananaOS.dll</HintPath>
+      <HintPath>E:\steam\steamapps\common\Gorilla Tag\BepInEx\plugins\BananaOS(8).dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>$(BepInExAssemblyPath)\BepInEx.dll</HintPath>
